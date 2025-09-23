@@ -1,18 +1,11 @@
 <template>
-    <div class="mt-2">
+    <div class="flex flex-col">
         <header>
             <NavigationBar />
-            <nav class="nav">
-                <ul>
-                    <li><NuxtLink to="/siswa">Siswa</NuxtLink></li>
-                </ul>
-            </nav>
         </header>
-        <h1>ini halaman utama</h1>
-        <InputText />
-        <OptionDropdown />
-        <InputNumber />
-        <BaseToast class="mb-8"/>
-        <StudentCard />
+        <div class="mt-20" for="konten">
+            <BaseToast class="mb-8"/>
+            <Toast type="warning" title="Success" message="Periksa ulang input kamu"/>
+        </div>
     </div>
 </template>
