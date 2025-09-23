@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="mt-2">
         <header>
+            <NavigationBar />
             <nav class="nav">
                 <ul>
                     <li><NuxtLink to="/siswa">Siswa</NuxtLink></li>
@@ -8,6 +9,10 @@
             </nav>
         </header>
         <h1>ini halaman utama</h1>
-        <AppFooter/>
+        <InputText />
+        <OptionDropdown />
+        <InputNumber />
+        <BaseToast class="mb-8"/>
+        <StudentCard />
     </div>
 </template>

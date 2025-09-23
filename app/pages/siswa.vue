@@ -1,5 +1,5 @@
 <script setup>
-const { data: students, refresh } = await useFetch('http://localhost:3001/students')
+const { data: students} = await useFetch('http://localhost:3001/students')
 
 // fungsi untuk menghapus data
 async function hapusSiswa(id) {
