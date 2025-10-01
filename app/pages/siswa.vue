@@ -34,7 +34,7 @@ async function editSiswa(id, updatedData) {
             <h1 class="font-bold text-2xl mb-2">Daftar Data Siswa</h1>
             <hr class="max-w-96">
             <div class="mt-4 flex gap-2">
-                <StudentCard 
+                <Card 
                 nameData1="Nama",
                 title="John Doe"
                 nameData2="Kelas"
