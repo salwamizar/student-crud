@@ -15,7 +15,7 @@ const props = defineProps({
     data1: String, //kelas
     data2: String, //nis
     data3: String, //nomorhp
-    data4: String, //nilai
+    data4: String, //email
     value: {
         type: Array,
         default: () => []
@@ -25,8 +25,8 @@ const showDetail = ref(false)
 </script>
 <template>
 <div class="flex flex-col drop-shadow-lg rounded-xl bg-white max-w-48 h-80 p-2">
-    <div class="bg-gray-500 w-full h-40 rounded-lg object-cover">
-        <img :src="foto" alt="" class="rounded-lg">
+    <div class="aspect-square bg-gray-500 w-full rounded-lg overflow-hidden">
+        <img :src="foto" alt="" class="rounded-lg object-cover">
     </div>
     <div class="flex flex-col p-2 h-48">
         <p class="text-xl font-bold mb-2">{{ title }}</p>
@@ -40,8 +40,8 @@ const showDetail = ref(false)
                 </div>
                 <div class="mb-2">
                     <ul class="space-y-2">
+                        <li>{{ data1 }}</li>
                         <li>{{ data2 }}</li>
-                        <li>{{ data3 }}</li>
                         <li>
                             <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800">{{ value[0] }}</span>
                         </li>
@@ -68,10 +68,10 @@ const showDetail = ref(false)
 </div>
 
 <div v-if="showDetail" click.self="showDetail = false" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    <div class="bg-white max-w-2xl rounded-xl p-4 flex flex-col drop-shadow-lg">
+    <div class="bg-white max-w-3xl rounded-xl p-4 flex flex-col drop-shadow-lg">
         <div class="flex flex-row relative">
-            <div class="max-w-48 mr-4 object-cover">
-                <img :src="foto" alt="" class="rounded-lg">
+            <div class="w-full aspect-square max-w-48 mr-4 bg-gray-500 rounded-lg">
+                <img :src="foto" alt="" class="rounded-lg object-cover">
             </div>
             <div class="flex">
                 <div class="flex flex-col mr-4">
@@ -85,29 +85,33 @@ const showDetail = ref(false)
                     </div>
                     <div class="flex flex-col mb-2">
                         <label for="Nama" class="text-xs mb-1">{{ nameData3 }}</label>
-                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" placeholder="XII MIPA A" readonly>
+                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" :value="data2" readonly>
                     </div>
                 </div>
                 <div class="flex flex-col">
                     <div class="flex flex-col mb-2">
                         <label for="Nama" class="text-xs mb-1">{{ nameData4 }}</label>
-                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" placeholder="johndoe@gmail.com" readonly>
+                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" :value="data3" readonly>
                     </div>
                     <div class="flex flex-col mb-2">
-                        <label for="Nama" class="text-xs mb-1">Nomor HP</label>
-                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" placeholder="089123456789" readonly>
+                        <label for="Nama" class="text-xs mb-1">{{ nameData5 }}</label>
+                        <input type="text" name="" id="" class="rounded-lg py-2 px-3 w-full text-sm truncate w-64 bg-gray-100" :value="data4" readonly>
                     </div>
                     <div class="flex flex-col mb-2">
-                    <label for="Nilai" class="text-xs mb-1">Nilai</label>
+                    <label for="Nilai" class="text-xs mb-1">{{ nameData6 }}</label>
                     <div class="">
                         <ul class="flex flex-row flex-wrap gap-2">
-                            <li> <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800">90</span></li>
+                            <li v-for="(n, i) in value" :key="i"> 
+                                <span 
+                                class="w-8 p-1 justify-center text-center rounded-lg font-bold"
+                                 :class="n >= 80 ? 'bg-green-200 text-green-800' : n >= 60 ? 'bg-yellow-200 text-yellow-800' : 'bg-red-200 text-red-800'">{{ n }}</span></li>
+                            <!-- <li> <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800">90</span></li>
                             <li> <span class="w-8 bg-yellow-200 p-1 justify-center text-center rounded-lg font-bold text-yellow-800">60</span></li>
                             <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
                             <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
                             <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
                             <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
-                            <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
+                            <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li> -->
                         </ul>
                     </div>
                     </div>
