@@ -12,7 +12,7 @@ const props = defineProps({
     },
     message:{
         type: String,
-        default: '',
+        default: 'lorem ipsum',
     },
 })
 
@@ -43,13 +43,14 @@ const typeStyles = {
     },
 }
 
+const style = computed(() => typeStyles[props.type] || typeStyles.success)
 
 </script>
 
 <template>
-<div :class="['flex align-middle drop-shadow-lg max-w-96 p-3 rounded-xl', typeStyles[type].bg]">
-    <div :class="['p-3 mr-2 rounded-xl', typeStyles[type].iconBg]">
-        <Icon :icon="typeStyles[type].icon" :class="[typeStyles[type].iconColor,'size-8']"/>
+<div :class="['flex items-center drop-shadow-lg max-w-96 p-3 rounded-xl', style.bg]">
+    <div :class="['p-3 mr-2 rounded-xl', style.iconBg]">
+        <Icon :icon="style.icon" :class="[style.iconColor,'size-8']"/>
     </div>
     <div class="flex justify-between w-full">
         <div class="">

@@ -50,7 +50,7 @@ async function tambahSiswa() {
                     <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Kelas</label> 
                     <p class="text-red-500 pl-2">*</p>
                 </div>
-                <OptionDropdown :options="['Pilih Kelas..', 'XII MIPA 1', 'XII MIPA 2']"/>
+                <OptionDropdown optionsvalue="XII MIPA 1, XII MIPA 2"/>
                 <div class="label-text flex max-w-24">
                     <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nilai</label> 
                     <p class="text-red-500 pl-2">*</p>
