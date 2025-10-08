@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import foto from '~/assets/pic1.jpg'
+import { computed } from 'vue'
 
 const props = defineProps({
     foto: String, //foto
@@ -13,15 +14,36 @@ const props = defineProps({
     nameData5: String, //kolom email
     nameData6: String, //kolom nilai
     data1: String, //kelas
-    data2: String, //nis
+    data2: [String, Number], //nis
     data3: String, //nomorhp
     data4: String, //email
     value: {
-        type: Array,
-        default: () => []
+        type: [Number, String, Array],
+        required: true
     }
 })
+
+const numericValue = computed(() => {
+    const v = props.value
+    if(Array.isArray(v)){
+        return Number(v[0])
+    }
+    if (typeof v === 'string') {
+        if (v.includes(',')) return Number(v.split(',')[0].trim())
+        return Numbber(v)
+    }
+    return Number(v)
+})
+
+const emit = defineEmits(['delete'])
 const showDetail = ref(false)
+const confirmDelete = ref(false)
+
+const handleDelete = () => {
+    emit('delete', props.id)
+    confirmDelete.value = false
+}
+
 </script>
 <template>
 <div class="flex flex-col drop-shadow-lg rounded-xl bg-white max-w-48 h-80 p-2">
@@ -35,7 +57,7 @@ const showDetail = ref(false)
                     <ul class="space-y-2">
                         <li>{{ nameData2 }}</li>
                         <li>{{ nameData3 }}</li>
-                        <li>{{ nameData4 }}</li>
+                        <li>{{ nameData6 }}</li>
                     </ul>
                 </div>
                 <div class="mb-2">
@@ -43,7 +65,13 @@ const showDetail = ref(false)
                         <li>{{ data1 }}</li>
                         <li>{{ data2 }}</li>
                         <li>
-                            <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800">{{ value[0] }}</span>
+                            <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800"
+                            :class="numericValue >= 80 
+                                 ? 'bg-green-200 text-green-800' 
+                                 : numericValue >= 60 
+                                    ? 'bg-yellow-200 text-yellow-800' 
+                                    : 'bg-red-200 text-red-800'"
+                            >{{ numericValue }}</span>
                         </li>
                     </ul>
                 </div>
@@ -59,7 +87,9 @@ const showDetail = ref(false)
                     <Icon icon="material-symbols:edit-outline-sharp" class="w-5 h-5 text-yellow-800 flex-shrink-0 group-hover:hidden" />
                     <span class="ml-2 text-yellow-800 text-sm font-medium hidden group-hover:inline transition-discrete">Edit</span>
                 </button>
-                <button class="group bg-red-200 rounded-lg w-8 p-1 flex justify-center hover:w-20 duration-300 overflow-hidden">
+                <button 
+                @click="confirmDelete =  true"
+                class="group bg-red-200 rounded-lg w-8 p-1 flex justify-center hover:w-20 duration-300 overflow-hidden">
                     <Icon icon="mdi:trash" class="w-5 h-5 text-red-800 flex-shrink-0 group-hover:hidden" />
                     <span class="ml-2 text-red-800 text-sm font-medium hidden group-hover:inline transition-discrete">Hapus</span>
                 </button>
@@ -104,7 +134,11 @@ const showDetail = ref(false)
                             <li v-for="(n, i) in value" :key="i"> 
                                 <span 
                                 class="w-8 p-1 justify-center text-center rounded-lg font-bold"
-                                 :class="n >= 80 ? 'bg-green-200 text-green-800' : n >= 60 ? 'bg-yellow-200 text-yellow-800' : 'bg-red-200 text-red-800'">{{ n }}</span></li>
+                                 :class="n >= 80 
+                                 ? 'bg-green-200 text-green-800' 
+                                 : n >= 60 
+                                    ? 'bg-yellow-200 text-yellow-800' 
+                                    : 'bg-red-200 text-red-800'">{{ n }}</span></li>
                             <!-- <li> <span class="w-8 bg-green-200 p-1 justify-center text-center rounded-lg font-bold text-green-800">90</span></li>
                             <li> <span class="w-8 bg-yellow-200 p-1 justify-center text-center rounded-lg font-bold text-yellow-800">60</span></li>
                             <li> <span class="w-8 bg-red-200 p-1 justify-center text-center rounded-lg font-bold text-red-800">30</span></li>
@@ -124,6 +158,23 @@ const showDetail = ref(false)
         <div class="flex flex-row-reverse gap-2">
             <button class="bg-red-200 p-2 rounded-lg text-red-800 text-base">Hapus</button>
             <button class="bg-yellow-200 p-2 rounded-lg text-yellow-800">Edit</button>
+        </div>
+    </div>
+</div>
+<div v-if="confirmDelete" click.self="confirmDelete = false"
+class="fixed inset-0 bg-black/40 flex flex-col items-center justify-center z-50">
+    <div class="bg-white max-w-48 flex flex-col p-4 rounded-xl drop-shadow-lg">
+        <div class="flex gap-2 relative flex-col justify-center items-center text-center">
+            <div class="">
+                <Icon icon="mdi:trash" class="w-10 h-10 text-red-800 flex-shrink-0 group-hover:hidden" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <span>Apakah anda yakin untuk menghapus data siswa ini?</span>
+                <div class="flex flex-row justify-center gap-2">
+                    <button @click="confirmDelete = false"  class="bg-blue-200 rounded-full py-2 px-4">Tidak</button>
+                    <button @click="handleDelete" class="bg-red-200 rounded-full py-2 px-4">Ya</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

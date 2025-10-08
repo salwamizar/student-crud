@@ -1,14 +1,16 @@
+import cors from 'cors'
 const express = require('express');
 const bodyParser= require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors())
 
 var students = [
     {
         id: 1,
         name:"Dina",
-        nis:12345,
+        nis:"12345",
         no_hp:"08912345678",
         email:"dinapunya@gmail.com",
         kelas:"12 MIPA A",
@@ -20,7 +22,7 @@ var students = [
     {
         id: 2,
         name:"Nabil",
-        nis:12346,
+        nis:"12346",
         no_hp:"08923456789",
         email:"nabil@gmail.com",
         kelas:"12 MIPA A",
@@ -78,7 +80,7 @@ app.post('/students', (req, res) => {
     const newStudent = { 
         id: students.length + 1, 
         name,
-        nis, //dikasih parseInt biar konsisten integer
+        nis: String(nis), 
         no_hp,
         email,
         kelas,
@@ -104,13 +106,6 @@ app.get('/students/:id', (req, res) => {
 app.put('/students/:id', (req, res) => {
     const student = students.find(i => i.id === parseInt(req.params.id));
     if(!student) return res.status(404).send('Data not found');
-
-    /* student.name = req.body.name;
-    student.nis = req.body.nis;
-    student.email = req.body.email;
-    student.no_hp = req.body.no_hp;
-    student.kelas = req.body.kelas;
-    student.nilai = req.body.nilai; */
 
     //daftar field yang boleh diupdate
     const allowedFields = ['name', 'nis', 'email', 'no_hp', 'kelas', 'nilai'];
