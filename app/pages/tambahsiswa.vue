@@ -1,85 +1,78 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import Toast from '~/components/Toast.vue'
+import Form from '~/components/Form.vue'
+const showToast = ref(false)
+const toastData = ref({ type: '', title: '', message: ''})
 
-const router = useRouter()
-const newStudent = ref({
-    name: '',
-    nis: '',
-    no_hp: '',
-    email: '',
-    kelas: '',
-    nilai: ''
-})
-
-const loading = ref(false)
-
-const submitForm = async () => {
-    loading.value = true
-    const payload = {
-        ...newStudent.value,
-        nis: String(newStudent.value.nis),
-        nilai: Number(newStudent.value.nilai)
+function triggerToast(type, message = '') {
+    if( type === 'success') {
+        toastData.value = {
+            type: 'success',
+            title: 'Success',
+            message: message || 'Data berhasil disimpan.'   
+        }
+    } else if (type === 'warning') {
+        toastData.value = {
+            type: 'warning',
+            title: 'Warning!',
+            message: message || 'Pastikan semua data terisi.'
+        }
+    } else if (type === 'error'){
+        toastData.value = {
+            type: 'error',
+            title: 'Error',
+            message: message || 'Terjadi kesalahan'
+        }
+    } else if (type === 'info'){
+        toastData.value = {
+            type: 'info',
+            title: 'Information',
+            message: message || 'Ada pemberitahuan'
+        }
     }
 
+    showToast.value = true
+
+    setTimeout(() => {
+      showToast.value = false  
+    }, 3000)
+}
+
+const handleAdd = async (newStudent) => {
     try {
-        await $fetch('http://localhost:3001/students', {
+        const res = await $fetch('http://localhost:3001/students', {
             method: 'POST',
-            body: payload
+            body: newStudent,
+            onRequestError: (err) => console.log('Request error:', err),
+            onResponseError: (err) => console.log('Response error:', err)
         })
 
-        await navigateTo('/siswa')
-        alert('Data berhasil ditambahkan!')
+        triggerToast('success', 'Data berhasil ditambahkan!')
+        setTimeout(() => navigateTo('/siswa'), 1000)
     } catch (err) {
         console.error(err)
-        alert('Gagal menambahkan data siswa')
-    } finally {
-        loading.value = false
+        triggerToast('error', 'Terjadi kesalahan saat menambahkan data')
     }
 }
 
 </script>
 <template>
-    <div class="flex justify-center pt-4">
-        <div class="max-w-96 bg-white flex flex-col p-4 rounded-lg drop-shadow-lg">
-            <h1 class="text-xl font-bold mb-2">Tambahkan Data Siswa</h1>
-            <hr>
-            <form @submit.prevent="submitForm" class="max-w-sm mt-2">
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <InputText v-model="newStudent.name" required placeholder="Nama"/>
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">NIS</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <InputText v-model="newStudent.nis" required placeholder="12345"/>
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nomor Hp</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <InputText v-model="newStudent.no_hp" required placeholder="08xxxxxxxxx"/>
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <InputText v-model="newStudent.email" required placeholder="example@gmail.com"/>
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Kelas</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <OptionDropdown v-model="newStudent.kelas"  required optionsvalue="XII MIPA 1, XII MIPA 2"/>
-                <div class="label-text flex max-w-24">
-                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nilai</label> 
-                    <p class="text-red-500 pl-2">*</p>
-                </div>
-                <InputNumber v-model="newStudent.nilai" required placeholder="Contoh: 90"/>
-                <div class="flex gap-2">
-                    <ContentButton text="Batal" variant="delete" />
-                    <ContentButton type="submit" :text="loading ? 'Menambahkan...' : 'Tambah'" variant="submit" :disabled="loading" />
-                </div>
-            </form>
-        </div>
-    </div>
+    <Form @submit="handleAdd" />
+        <transition 
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="translate-y-10 opacity-0"
+            enter-to-class="translate-y-0 opacity-100"
+            leave-active-class="transition-all duration-300 ease-in"
+            leave-from-class="translate-y-0 opacity-100"
+            leave-to-class="translate-y-10 opacity-0"
+            >
+            <Toast 
+                v-if="showToast" 
+                :type="toastData.type"
+                :title="toastData.title"
+                :message="toastData.message"
+                class="fixed top-5 right-5 z-50"
+            />
+        </transition>
 </template>

@@ -5,6 +5,10 @@ import foto from '~/assets/pic1.jpg'
 import { computed } from 'vue'
 
 const props = defineProps({
+    id: {
+        type: [String, Number],
+        required: true
+    },
     foto: String, //foto
     title: String, //nama
     nameData1: String, //kolom nama
@@ -30,7 +34,7 @@ const numericValue = computed(() => {
     }
     if (typeof v === 'string') {
         if (v.includes(',')) return Number(v.split(',')[0].trim())
-        return Numbber(v)
+        return Number(v)
     }
     return Number(v)
 })

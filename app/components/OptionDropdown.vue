@@ -25,7 +25,7 @@ const emit = defineEmits(['update:modelValue'])
         :value="modelValue"
         @change="emit('update:modelValue', $event.target.value)">
             <option>{{ placeholder }}</option>
-            <option v-for="(opt, i) in optionList" :key="i" value="opt">{{ opt }}</option>
+            <option v-for="(opt, i) in optionList" :key="i" :value="opt">{{ opt }}</option>
         </select>
     </div>
 </template>

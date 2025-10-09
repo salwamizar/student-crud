@@ -2,7 +2,12 @@
 import Card from '~/components/Card.vue'
 import Toast from '~/components/Toast.vue'
 
-const { data: students, pending, error, refresh } = await useFetch('http://localhost:3001/students')
+const { data: students, pending, error, refresh } = await useFetch('http://localhost:3001/students', {
+    key: 'students',
+    immediate: true,
+    dedupe: false,
+    transform: (res) => res
+})
 
 const showToast = ref(false)
 const toastData = ref({ type: '', title: '', message: ''})
@@ -43,6 +48,8 @@ function triggerToast(type, message = '') {
 
 const handleDelete = async (id) => {
     try {
+        students.value = students.value.filter(s => s.id !== id)
+
         const res = await fetch(`http://localhost:3001/students/${id}`, {
             method: 'DELETE',
         })
@@ -72,6 +79,7 @@ const handleDelete = async (id) => {
                 <Card 
                 v-for="s in students"
                 :key="s.id"
+                :id="s.id"
                 nameData1="Nama",
                 :title="s.name"
                 nameData2="Kelas"
@@ -86,6 +94,7 @@ const handleDelete = async (id) => {
                 :value="Array.isArray(s.nilai) ? s.nilai : [s.nilai]"
                 @delete="handleDelete"/>
             </div>
+
             <transition 
             enter-active-class="transition-all duration-300 ease-out"
             enter-from-class="translate-y-10 opacity-0"
